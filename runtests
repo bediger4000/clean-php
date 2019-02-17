@@ -1,0 +1,21 @@
+#!/bin/bash
+
+rm -rf output
+mkdir output
+
+for TNAME in zoo/*.php
+do
+	echo test $TNAME
+	B=$(basename ${TNAME%.*})
+	OUTPUT=output/$B.out
+	DESIRED=desired/$B.out
+	./cleanup.php $TNAME > $OUTPUT
+	if diff -q $OUTPUT $DESIRED
+	then
+		:
+	else
+		echo Problem with test $TNAME
+		echo "# diff {output,desired}/$B.out"
+		#exit 1
+	fi
+done

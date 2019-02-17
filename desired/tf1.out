@@ -1,0 +1,17 @@
+$variablename = 42;
+$variablename = array(42, 12, -1, 100000.001);
+function functionname($argumentname, $argumentname, $argumentname)
+{
+    return $variablename + $variablename % $variablename;
+}
+class classname
+{
+    var $propertyname;
+    function method1($arg1)
+    {
+        return $this->instancevar + $variablename;
+    }
+}
+$variablename = new someclass();
+$variablename->methodcall(1, 2, 3);
+$variablename->instancevar = 93;
