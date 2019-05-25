@@ -13,7 +13,6 @@ class CleanupVisitor extends PhpParser\NodeVisitorAbstract
 	}
 
 	public function enterNode(PhpParser\Node $node) {
-
 		if ($node instanceof PhpParser\Node\Stmt\Function_) {
 			$node->name = 'functionname';
 			$this->symtbl->pushScope();
@@ -21,12 +20,12 @@ class CleanupVisitor extends PhpParser\NodeVisitorAbstract
 				$this->symtbl->addSymbol($formal_argument->name, NULL, FALSE);
 				$formal_argument->name = 'argumentname';
 			}
-
 		} else
 		if ($node instanceof PhpParser\Node\Stmt\Property) {
 			$node->props[0]->name = 'propertyname';
 		} else
 		if ($node instanceof PhpParser\Node\Stmt\Class_) {
+			// What about built-in class' names?
 			$node->name = 'classname';
 		} else
 		if ($node instanceof PhpParser\Node\Expr\Variable) {
@@ -34,7 +33,14 @@ class CleanupVisitor extends PhpParser\NodeVisitorAbstract
 				$node->name = 'variablename';
 		} else
 		if ($node instanceof PhpParser\Node\Expr\FuncCall) {
-			$node->name->parts[0] = 'functioncall';
+			if (!function_exists($node->name->parts[0])) {
+				// I think this will leave built-in functions alone.
+				// This program isn't executing functions in the parsed PHP,
+				// it's just visting their AST nodes.
+				// It will replace functions defined in extensions,
+				// even if they're configured for the installation running this.
+				$node->name->parts[0] = 'functioncall';
+			}
 		} else
 		if ($node instanceof PhpParser\Node\Expr\MethodCall) {
 			$node->name = 'methodcall';
